@@ -1,12 +1,12 @@
-import torch.nn.functional as Functional
+import torch as torch
 
 
 def sigmoid(x):
-    return Functional.sigmoid(x)
+    return torch.sigmoid(x)
 
 
 def tanh(x):
-    return Functional.tanh(x)
+    return torch.tanh(x)
 
 
 class Activations:

@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import torch
 import NEAT_implementation.Utils.utils as utils
 from NEAT_implementation.Genotype.genome import Genome
 from NEAT_implementation.Species.species import Species
@@ -90,6 +91,8 @@ class Population:
                 print('Best Genome Fitness:', best.fitness)
                 print('Best Genome Length',   len(best.connections))
                 print()
+
+            torch.save(best, "./Results/" + self.configuration.GAME + '/' +  self.configuration.GAME +  '_' + str(generation))
 
         return None, None
 

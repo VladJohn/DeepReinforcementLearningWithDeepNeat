@@ -55,7 +55,7 @@ class FeedForwardNetwork(nn.Module):
         outputVector = autograd.Variable(torch.zeros((1, len(outputValues)), device=DEVICE, requires_grad=True))
         for i, value in enumerate(outputValues):
             outputVector[0][i] = outputs[value.referenceNode.id]
-        return output
+        return outputVector
 
     def buildValues(self):
         values = []
