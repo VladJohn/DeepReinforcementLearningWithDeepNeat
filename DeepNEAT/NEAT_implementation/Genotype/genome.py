@@ -40,7 +40,7 @@ class Genome:
             newNode.outputs = random.choice(config.NUMBER_OF_NODES)
         existingConnection = self.getRandomConnection()
 
-        inputNode = getNode(existingConnection.inputNodeId)
+        inputNode = self.getNode(existingConnection.inputNodeId)
         newNode.inputs = inputNode.outputs
         newNode.activation = random.choice(config.ACTIVATION)
 
@@ -144,7 +144,13 @@ class Genome:
         self.innovationNumbers.add(newConnection.innovationNumber)
 
     def addNodeCopy(self, copy):
-        self.nodes.append(Node(copy.id, copy.type))
+        newNode = Node(copy.id, copy.type)
+        newNode.inputs = copy.inputs
+        newNode.outputs = copy.outputs
+        newNode.activation = copy.activation
+        newNode.stride = copy.stride
+        newNode.kernelSize = copy.kernelSize
+        self.nodes.append(newNode)
 
     def getInputConnections(self, nodeId):
         connections = []

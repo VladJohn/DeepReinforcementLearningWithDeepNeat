@@ -5,7 +5,7 @@ from DeepNEAT.NEAT_implementation.Genotype.genome import Genome
 
 def crossover(first, second, config):
 
-    child = Genome()
+    child = Genome(config)
     best, worse = orderParentsByFitness(first, second)
 
     for connection in best.connections:

@@ -32,7 +32,7 @@ if solution is not None:
         env.render()
         input = torch.Tensor([observation]).to(config.PoleBalanceConfig.DEVICE)
 
-        pred = round(float(phenotype(input)))
+        pred = torch.argmax(phenotype(input)[0]).numpy()
         observation, reward, done, info = env.step(pred)
 
         fitness += reward
