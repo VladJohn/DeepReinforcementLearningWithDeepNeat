@@ -30,6 +30,7 @@ class FeedForwardNetwork(nn.Module):
                 x = F.relu(currentValue.node(x))
 
             if (currentValue.referenceNode.type == 'output'):
+                x = x.view(-1, currentValue.referenceNode.inputs)
                 x = currentValue.node(x)
 
             if currentValue.referenceNode.type != 'input' and currentValue.referenceNode.type != 'output':

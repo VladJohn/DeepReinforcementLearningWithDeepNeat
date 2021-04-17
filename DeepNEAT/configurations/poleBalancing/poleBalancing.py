@@ -75,6 +75,7 @@ class PoleBalanceConfig:
     )
 
     def fitness(self, genome):
+        print("--------------------------------------------------")
         print ("Preparing genome...")
         # OpenAI Gym
         env = gym.make('LongCartPole-v0')
@@ -83,9 +84,6 @@ class PoleBalanceConfig:
 
         fitness = 0
         phenotype = FeedForwardNetwork(genome, self)
-        print('------------------------------------------------------------------')
-        print(phenotype)
-        print('------------------------------------------------------------------')
 
         optimizer = optim.Adam(phenotype.parameters(), self.LEARNING_RATE)
         lossFunction = nn.MSELoss()
@@ -102,14 +100,10 @@ class PoleBalanceConfig:
         testX = X[-valSize:]
         testy = y[-valSize:]
 
-        random_data = torch.rand(100, 4)
-        result = phenotype(random_data)
-        print (result)
-
         print ("Training genome...")
 
         for epoch in range(self.EPOCHS):
-            for i in tqdm(range(0, len(trainX), self.BATCH_SIZE)):
+            for i in range(0, len(trainX), self.BATCH_SIZE):
                 batchX = trainX[i:i+self.BATCH_SIZE].view(-1, 4)
                 batchy = trainy[i:i+self.BATCH_SIZE]
 
@@ -120,13 +114,13 @@ class PoleBalanceConfig:
                 loss.backward()
                 optimizer.step()
 
-            print(f"Epoch: {epoch}. Loss: {loss}")
+            #print(f"Epoch: {epoch}. Loss: {loss}")
 
         print ("Testing genome...")
         correct = 0
         total = 0
         with torch.no_grad():
-            for i in tqdm(range(len(testX))):
+            for i in range(len(testX)):
                 real_class = torch.argmax(testy[i])
                 net_out = phenotype(testX[i].view(-1, 4))[0]
                 predicted_class = torch.argmax(net_out)
@@ -137,7 +131,7 @@ class PoleBalanceConfig:
 
         print ("Running genome...")
         while not done:
-            env.render()
+            #env.render()
             input = torch.Tensor([observation]).to(self.DEVICE)
 
             pred = torch.argmax(phenotype(input)[0]).numpy()
