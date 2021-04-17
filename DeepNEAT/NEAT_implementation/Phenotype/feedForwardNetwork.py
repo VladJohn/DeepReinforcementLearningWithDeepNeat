@@ -5,7 +5,7 @@ import DeepNEAT.NEAT_implementation.Activations.activations as activations
 from torch import autograd
 import random
 
-DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cpu")
 
 
 class FeedForwardNetwork(nn.Module):
@@ -13,8 +13,12 @@ class FeedForwardNetwork(nn.Module):
     def __init__(self, genome, config):
         super(FeedForwardNetwork, self).__init__()
         self.genome = genome
-        self.values = self.buildValues()
         self.config = config
+        self.values = self.buildValues(config)
+        self.nn_modules = nn.ModuleList()
+
+        for value in self.values:
+            self.nn_modules.append(value.node)
 
     def forward(self, x):
         stackedValues = self.genome.orderNodesByValue(self.values)
@@ -22,7 +26,10 @@ class FeedForwardNetwork(nn.Module):
         while len(stackedValues) > 0:
             currentValue = stackedValues.pop()
 
-            if (currentValue.referenceNode.type == 'input' or currentValue.referenceNode.type == 'output'):
+            if (currentValue.referenceNode.type == 'input'):
+                x = F.relu(currentValue.node(x))
+
+            if (currentValue.referenceNode.type == 'output'):
                 x = currentValue.node(x)
 
             if currentValue.referenceNode.type != 'input' and currentValue.referenceNode.type != 'output':
@@ -43,15 +50,13 @@ class FeedForwardNetwork(nn.Module):
                         x = F.tanh(currentValue.node(x))
         return F.softmax(x, 1)
 
-    def buildValues(self):
+    def buildValues(self, config):
         values = []
 
         for node in self.genome.nodes:
             inputConnections = self.genome.getInputConnections(node.id)
-            weights = [connection.weight for connection in inputConnections]
 
-            newValue = Value(node, self.config)
-            newValue.setWeights(weights)
+            newValue = Value(node, config)
 
             values.append(newValue)
         return values
@@ -62,22 +67,16 @@ class Value:
     def __init__(self, referenceNode, config):
         self.referenceNode = referenceNode
         if self.referenceNode.type == 'input':
-            self.node = self.buildLinear(config.INPUT_SIZE, self.referenceNode.outputs)
+            self.node = self.buildLinear(self.referenceNode.inputs, self.referenceNode.outputs)
         if self.referenceNode.type == 'output':
-            self.node = self.buildLinear(self.referenceNode.inputs, config.OUTPUT_SIZE)
+            self.node = self.buildLinear(self.referenceNode.inputs, self.referenceNode.outputs)
         if self.referenceNode.type == 'linear':
             self.node = self.buildLinear(self.referenceNode.inputs, self.referenceNode.outputs)
         if self.referenceNode.type == 'conv1d':
             self.node = self.buildConv1d(self.referenceNode.inputs, self.referenceNode.outputs, self.referenceNode.kernelSize, self.referenceNode.stride)
         self.activation = self.referenceNode.activation
 
-    def setWeights(self, weights):
-        if self.referenceNode.type != 'input' and self.referenceNode.type != 'bias':
-            weights = torch.cat(weights).unsqueeze(0)
-            for parameter in self.node.parameters():
-                parameter.data = weights
-
-    def buildLinear(self, inputs, outputs, config):
+    def buildLinear(self, inputs, outputs):
         return nn.Linear(inputs, outputs, False)
 
     def buildConv1d(self, inputs, outputs, kernelSize, stride):

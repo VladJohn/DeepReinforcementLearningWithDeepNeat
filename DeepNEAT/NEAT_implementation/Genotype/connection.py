@@ -1,7 +1,7 @@
 import torch
 import DeepNEAT.NEAT_implementation.Population.population as population
 
-DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cpu")
 
 class Connection:
     def __init__(self, inputNodeId, outputNodeId, active):
