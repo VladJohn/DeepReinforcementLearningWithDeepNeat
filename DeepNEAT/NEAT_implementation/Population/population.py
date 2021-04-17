@@ -118,16 +118,18 @@ class Population:
     def setInitialPopulation(self):
         population = []
         for i in range(self.configuration.POPULATION_SIZE):
-            freshGenome = Genome()
+            freshGenome = Genome(self.configuration)
             input = None
             output = None
             # bias = None
 
             input = freshGenome.addNode('input')
+            input.inputs = self.configuration.INPUT_SIZE
             input.outputs = self.configuration.INPUT_SIZE
 
             output = freshGenome.addNode('output')
-            output.inputs = self.configuration.OUTPUT_SIZE
+            output.inputs = input.outputs
+            output.outputs = self.configuration.OUTPUT_SIZE
 
             # if self.configuration.USE_BIAS:
             #     bias = freshGenome.addNode('bias')

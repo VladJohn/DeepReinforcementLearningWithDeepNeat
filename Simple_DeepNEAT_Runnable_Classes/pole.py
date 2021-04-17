@@ -1,12 +1,16 @@
 import gym
 import torch
-import NEAT.NEAT_implementation.Population.population as population
-import NEAT.configurations.poleBalancing.poleBalancing as config
-from NEAT.NEAT_implementation.Phenotype.feedForwardNetwork import FeedForwardNetwork
+import DeepNEAT.NEAT_implementation.Population.population as population
+import DeepNEAT.configurations.poleBalancing.poleBalancing as config
+from DeepNEAT.NEAT_implementation.Phenotype.feedForwardNetwork import FeedForwardNetwork
 import time
-from NEAT.visualization.Visualization import draw_net
+from DeepNEAT.visualization.Visualization import draw_net
+import torch.nn as nn
+import torch.nn.functional as F
 
 configuration = config.PoleBalanceConfig()
+if configuration.BUILD_TEST_DATA == True:
+    configuration.build_test_data()
 neat = population.Population(configuration)
 solution, generation = neat.run()
 
@@ -33,3 +37,26 @@ if solution is not None:
 
         fitness += reward
     env.close()
+
+# class Net(nn.Module):
+#     def __init__(self):
+#         super(Net, self).__init__()
+#         self.fc1 = nn.Linear(4, 4, False)
+#         self.fc2 = nn.Linear(4, 2, False)
+#
+#     # x represents our data
+#     def forward(self, x):
+#         x = F.relu(self.fc1(x))
+#         x = self.fc2(x)
+#
+#         # Apply softmax to x
+#         output = F.log_softmax(x, dim=1)
+#         return output
+#
+# random_data = torch.rand(100, 4)
+#
+# print(random_data)
+# my_nn = Net()
+# print(my_nn)
+# result = my_nn(random_data)
+# print (result)

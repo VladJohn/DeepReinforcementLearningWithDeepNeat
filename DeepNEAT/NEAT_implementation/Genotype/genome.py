@@ -14,7 +14,7 @@ class Genome:
         self.fitness = None
         self.adjustedFitness = None
         self.species = None
-        self.configuration = configration
+        self.configuration = configuration
 
     # def addConnectionMutation(self):
     #
