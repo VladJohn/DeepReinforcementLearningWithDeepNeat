@@ -6,6 +6,7 @@ from DeepNEAT.NEAT_implementation.Genotype.genome import Genome
 from DeepNEAT.NEAT_implementation.Species.species import Species
 from DeepNEAT.NEAT_implementation.Crossover.crossover import crossover
 from DeepNEAT.NEAT_implementation.Mutation.mutation import mutate
+import concurrent.futures
 
 
 class Population:
@@ -22,8 +23,12 @@ class Population:
 
     def run(self):
         for generation in range(1, self.configuration.NUMBER_OF_GENERATIONS):
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                futures = [executor.submit(self.configuration.fitness, genome) for genome in self.population]
+                fitnesses = [f.result() for f in futures]
             for genome in self.population:
-                genome.fitness = max(0, self.configuration.fitness(genome))
+                iterator = self.population.index(genome)
+                genome.fitness = max(0, fitnesses[iterator])
 
             best = utils.getBestPerformingNetwork(self.population)
 
