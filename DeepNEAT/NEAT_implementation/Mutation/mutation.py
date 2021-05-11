@@ -20,7 +20,7 @@ def mutate(genome, config):
 
     if utils.randomUniformValue() < config.NUMBER_OF_CONVOLUTION_FILTERS_MUTATION_RATE:
         for node in genome.nodes:
-            if (node.type == 'conv1d' and utils.randomUniformValue() < config.NUMBER_OF_CONVOLUTION_FILTERS_MUTATION_RAT):
+            if (node.type == 'conv1d' and utils.randomUniformValue() < config.NUMBER_OF_CONVOLUTION_FILTERS_MUTATION_RATE):
                 newNode.outputs = random.choice(config.NUMBER_OF_CONVOLUTION_FILTERS)
 
     if utils.randomUniformValue() < config.KERNEL_SIZE_MUTATION_RATE:

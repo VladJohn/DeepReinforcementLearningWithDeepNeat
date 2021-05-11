@@ -23,7 +23,7 @@ class Population:
 
     def run(self):
         for generation in range(1, self.configuration.NUMBER_OF_GENERATIONS):
-            with concurrent.futures.ThreadPoolExecutor() as executor:
+            with concurrent.futures.ProcessPoolExecutor() as executor:
                 futures = [executor.submit(self.configuration.fitness, genome) for genome in self.population]
                 fitnesses = [f.result() for f in futures]
             for genome in self.population:
