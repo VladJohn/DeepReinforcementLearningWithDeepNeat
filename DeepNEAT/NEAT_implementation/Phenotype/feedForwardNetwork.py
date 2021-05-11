@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import DeepNEAT.NEAT_implementation.Activations.activations as activations
 from torch import autograd
 import random
+import copy
 
 DEVICE = torch.device("cpu")
 
@@ -22,8 +23,10 @@ class FeedForwardNetwork(nn.Module):
 
     def forward(self, x):
         stackedValues = self.genome.orderNodesByValue(self.values)
+        currentValue = None
 
         while len(stackedValues) > 0:
+            previousValue = copy.deepcopy(currentValue)
             currentValue = stackedValues.pop()
 
             if (currentValue.referenceNode.type == 'input'):
@@ -34,8 +37,10 @@ class FeedForwardNetwork(nn.Module):
                 x = currentValue.node(x)
 
             if currentValue.referenceNode.type != 'input' and currentValue.referenceNode.type != 'output':
-                x = x.view(-1, currentValue.referenceNode.inputs)
+                #x = x.view(-1, currentValue.referenceNode.inputs)
                 if currentValue.referenceNode.type == 'conv1d':
+                    if previousValue.referenceNode.type == 'input' or previousValue.referenceNode.type == 'linear':
+                        x = x.unsqueeze(dim=2)
                     if currentValue.referenceNode.activation == 'relu':
                         x = F.max_pool1d(F.relu(currentValue.node(x)), 2)
                     if currentValue.referenceNode.activation == 'sigmoid':
@@ -43,6 +48,8 @@ class FeedForwardNetwork(nn.Module):
                     if currentValue.referenceNode.activation == 'tanh':
                         x = F.max_pool1d(F.tanh(currentValue.node(x)), 2)
                 else:
+                    if previousValue.referenceNode.type == 'conv1d':
+                        x = x.squeeze()
                     if currentValue.referenceNode.activation == 'relu':
                         x = F.relu(currentValue.node(x))
                     if currentValue.referenceNode.activation == 'sigmoid':
