@@ -25,7 +25,7 @@ if solution is not None:
     torch.save(solution, "./Results/" + neat.configuration.GAME + '/' +  neat.configuration.GAME +  '_final')
 
     while not done:
-        env.render()
+        #env.render()
         input = torch.Tensor([observation]).to(config.SpaceInvadersConfig.DEVICE)
 
         pred = torch.argmax(phenotype(input))

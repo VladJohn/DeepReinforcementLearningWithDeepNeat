@@ -24,7 +24,7 @@ class TimePilotConfig:
 
     SCALE_ACTIVATION = 4.9
 
-    FITNESS_THRESHOLD = 50000.0
+    FITNESS_THRESHOLD = 6000.0
 
     POPULATION_SIZE = 10
     NUMBER_OF_GENERATIONS = 15
@@ -139,9 +139,9 @@ class TimePilotConfig:
         print ('Bulding test data...')
         env = gym.make("TimePilot-ram-v0")
         env.reset()
-        goalSteps = 5000
-        scoreRequirement = 500
-        initialGames = 1000
+        goalSteps = 20000
+        scoreRequirement = 600
+        initialGames = 100
         trainingData = []
         scores = []
         acceptedScores = []

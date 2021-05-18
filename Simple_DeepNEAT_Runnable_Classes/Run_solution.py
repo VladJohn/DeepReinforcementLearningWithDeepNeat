@@ -1,13 +1,13 @@
 import gym
 import torch
-import NEAT.NEAT_implementation.Population.population as population
-import NEAT.configurations.TimePilot.timePilot as config
-#import NEAT.configurations.Freeway.freeway as config
-#import NEAT.configurations.SpaceInvaders.spaceInvaders as config
-from NEAT.NEAT_implementation.Phenotype.feedForwardNetwork import FeedForwardNetwork
+import DeepNEAT.NEAT_implementation.Population.population as population
+#import DeepNEAT.configurations.TimePilot.timePilot as config
+import DeepNEAT.configurations.Freeway.freeway as config
+#import DeepNEAT.configurations.SpaceInvaders.spaceInvaders as config
+from DeepNEAT.NEAT_implementation.Phenotype.feedForwardNetwork import FeedForwardNetwork
 import time
-from NEAT.visualization.Visualization import draw_net
-from NEAT.NEAT_implementation.Genotype.genome import Genome
+from DeepNEAT.visualization.Visualization import draw_net
+from DeepNEAT.NEAT_implementation.Genotype.genome import Genome
 
 configuration = config.TimePilotConfig()
 #configuration = config.FreewayConfig()
@@ -32,8 +32,9 @@ while not done:
     #input = torch.Tensor([observation]).to(config.FreewayConfig.DEVICE)
     #input = torch.Tensor([observation]).to(config.SpaceInvadersConfig.DEVICE)
 
-    pred = torch.argmax(phenotype(input))
+    pred = torch.argmax(phenotype(input)[0]).numpy()
     observation, reward, done, info = env.step(pred)
 
     fitness += reward
+print(fitness)
 env.close()
