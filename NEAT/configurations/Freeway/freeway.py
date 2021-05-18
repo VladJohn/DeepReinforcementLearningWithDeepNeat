@@ -15,10 +15,10 @@ class FreewayConfig:
     ACTIVATION = 'sigmoid'
     SCALE_ACTIVATION = 4.9
 
-    FITNESS_THRESHOLD = 100.0
+    FITNESS_THRESHOLD = 20.0
 
-    POPULATION_SIZE = 30
-    NUMBER_OF_GENERATIONS = 30
+    POPULATION_SIZE = 10
+    NUMBER_OF_GENERATIONS = 15
     SPECIATION_THRESHOLD = 3.0
 
     CONNECTION_MUTATION_RATE = 0.80
@@ -32,7 +32,7 @@ class FreewayConfig:
     PERCENTAGE_TO_SAVE = 0.80
 
     def fitness(self, genome):
-        print ("Running genome...")
+        print ("Preparing genome...")
         # OpenAI Gym
         env = gym.make('Freeway-ram-v0')
         done = False
@@ -41,6 +41,7 @@ class FreewayConfig:
         fitness = 0
         phenotype = FeedForwardNetwork(genome, self)
 
+        print("Running genome...")
         while not done:
             # env.render()
             input = torch.Tensor([observation]).to(self.DEVICE)
@@ -51,4 +52,5 @@ class FreewayConfig:
             fitness += reward
         env.close()
 
+        print("Done running genome... Returning to main...")
         return fitness

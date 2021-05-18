@@ -24,10 +24,10 @@ class FreewayConfig:
 
     SCALE_ACTIVATION = 4.9
 
-    FITNESS_THRESHOLD = 100.0
+    FITNESS_THRESHOLD = 20.0
 
-    POPULATION_SIZE = 30
-    NUMBER_OF_GENERATIONS = 30
+    POPULATION_SIZE = 10
+    NUMBER_OF_GENERATIONS = 15
     SPECIATION_THRESHOLD = 3.0
 
     CONNECTION_MUTATION_RATE = 0.80
@@ -140,7 +140,7 @@ class FreewayConfig:
         env.reset()
         goalSteps = 1000
         scoreRequirement = 0
-        initialGames = 1000
+        initialGames = 100
         trainingData = []
         scores = []
         acceptedScores = []

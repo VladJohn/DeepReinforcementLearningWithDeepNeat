@@ -88,4 +88,10 @@ class Value:
         return nn.Linear(inputs, outputs, False)
 
     def buildConv1d(self, inputs, outputs, kernelSize, stride):
-        return nn.Conv1d(inputs, outputs, kernelSize, stride)
+        return nn.Conv1d(
+            in_channels=inputs,
+            out_channels=outputs,
+            kernel_size=kernelSize,
+            stride=stride,
+            padding=((kernelSize - 1) // 2)
+        )

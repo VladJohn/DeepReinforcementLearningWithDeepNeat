@@ -36,4 +36,5 @@ while not done:
     observation, reward, done, info = env.step(pred)
 
     fitness += reward
+print(fitness)
 env.close()
